@@ -1,12 +1,9 @@
-## Longitudinal Social Network Analysis
+---
+# Longitudinal Social Network Analysis
 
-## Learning Goals
-* Describe the different models for longitudinal SNA.
-* Explain the different assumptions between SAOM, TERGM, and REM.
-* Run a stochastic actor oriented model (SOAM)
-* Run a relational event model (REM). 
 
 ## Analytical Models
+
 
 ### Stochastic Actor-oriented Model (SAOM)
 The **stochastic actor-oriented model** was developed by [Tom Snijders and colleagues](https://www.stats.ox.ac.uk/~snijders/siena/). Its purpose is to represent network dynamics based on observed longitudinal data, and to draw conclusions about the analyzed populations based on the model. Variants of SAOM for multiplex data (co-evolution of edges) and for modeling networks collected in different groups (e.g., different classrooms) exists. The following assumptions hold for SAOM models:
@@ -64,8 +61,6 @@ In general, the steps are:
 
 #### Loading and preparing the data
 We will first load the required packages and set our working directory.
-
-<!--#addvinstruction for windows users-->
 
 If you don't have the packages installed, run this line. If this fails, check the error message. Did a package that is needed for RSienaTest to run, fail to install?
 If this fails with a non-zero exist status and you have a mac, do you have the development tools (xcode) installed?
@@ -128,7 +123,6 @@ attributes<-read.csv("data/attributes_article.csv", header=TRUE, row.names=1)
 ae_att<-subset(attributes, team =="adult education")
 alp_att<-subset(attributes, team =="alpheus")
 hht_att<-subset(attributes, team =="hht")
-
 ```
 
 
@@ -137,7 +131,6 @@ Now that we have the data we need to prepare it. The network variables are value
 Below we define a simple function *dicoGT4* that takes a matrix and changes all values above 4 to 1 and the other values to 0. We apply this function to our networks. As we have stored them in a list, this is done in 1 line, instead of 18 lines (3 (for each team) x 3 (for each wave of data) X 2 (for each network variable))
 ```{r}
 dichoGT4<-function(m){(m>4)+ 0}
-             
 alpheusgt4<-lapply(alpheus, dichoGT4)
 adulteducgt4<-lapply(adulteduc, dichoGT4)
 hhtgt4<-lapply(hht, dichoGT4)
@@ -233,7 +226,9 @@ source("sienaprint_modified.R", echo=F)
 
 ```{r}
 fit1
+```
 
+```{r}
 sink("results_of_model.txt", append=T)
 fit1
 sink()
@@ -270,11 +265,14 @@ As with any other model, you can now decide to add or remove effects until you a
 <!-- # WHY CAN"T HE NOT CALCUALTE A STANDARD DEVIATION? -->
 ```{r}
 ir_effect<-includeEffects(ir_effect, transTrip)
-
 fit2 <- sienaBayes(ir_algo, data=ir, effects=ir_effect, nwarm=20, nmain=70, nrunMHBatches=10, silentstart=T)
 ```
+
 ```{r}
 fit2
+```
+
+```{r}
 sink("results_of_model.txt", append=T)
 fit2
 sink()
@@ -291,10 +289,13 @@ Wow, that backfired. There is a slight backward trend for information retrieval 
 To inspect the model, run convergence test you can load the saved model fit3.
 ```{r}
 fit3 <- sienaBayes(ir_algo, data=ir, effects=ir_effect, nwarm=20, nmain=100, nrunMHBatches=10, silentstart=T, initgainGlobal = 0, initgainGroupwise = 0)
-fit3
 RateTracePlots(fit3)
 NonRateTracePlots(fit3)
 ```
+```{r}
+fit3
+```
+
 If this is all the data that you have, I would suggest trying to add simple network effects, increase the Markov Chain, but to not have high hopes to ever get good results. Three teams with 5 people is a very small dataset.  
 
 ## Running a REM
