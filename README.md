@@ -1,4 +1,3 @@
----
 # Longitudinal Social Network Analysis
 
 
@@ -71,6 +70,7 @@ If this fails with a non-zero exist status and you have a mac, do you have the d
 ```
 
 Use `setwd` to set the path to your working directory. For example, `setwd("~/Dropbox/longitudinal_sna_asc_workshop/data")`. In windows this would look like `setwd("c:/Dropbox/longitudinal_sna_asc_workshop/data")`. If you are unsure about your working directory you can type `getwd` in the console. 
+
 ```{r}
 library(RSienaTest)
 ```
@@ -255,14 +255,10 @@ In your working directory you should now see 10 pictures (png files). Instructio
 
 We are going to look at *fit1_NRTP_1.png*. First a bit of background. What did you do so far ? You run a number of [*Markov Chain Monte Carlo* (MCMC)](http://twiecki.github.io/blog/2015/11/10/mcmc-sampling/) simulations using Bayesian regression. The goal of this is to find the values for your variables. The provided link provides an excellent explanation of how this is done. In this example, you ran 35 simulations (`nwarm = 10` and `nmain = 25`). At the end of every simulation, your variables were given certain values. These values you see as dots on your graph. Convergence happens when the values are similar in each run of the simulation. With our current analysis, it is not possible to make any claims about that. Theta is to Bayesian calculation what beta is to classical frequentist calculations. 
 
-<!-- ## ADD in folder: -->
-<!-- example of good and bad convergence -->
-
 #### Improve the model
 As with any other model, you can now decide to add or remove effects until you answered all your questions. For example, we can test for balance (*transTrip*). We'll add the effects to our effect object *ir_effect*, and run the model using `sienaBayes`. We are using a new fit name `fit2` so that we look again at the results we want, extract numbers from `fit1`. If you are running into memory problems, then you might want to overwrite the model. You could first save `fit1` as an *Rdata* file (`save(object, file = filepath)`). We did a couple of changes to the sienaBayes call. We increased the length of the Markov Chain, by increasing `nwarm` and `nmain`, and asked for a `silentstart` to reduce the output we get in the console. Running this model takes 58 seconds.
 
 
-<!-- # WHY CAN"T HE NOT CALCUALTE A STANDARD DEVIATION? -->
 ```{r}
 ir_effect<-includeEffects(ir_effect, transTrip)
 fit2 <- sienaBayes(ir_algo, data=ir, effects=ir_effect, nwarm=20, nmain=70, nrunMHBatches=10, silentstart=T)
